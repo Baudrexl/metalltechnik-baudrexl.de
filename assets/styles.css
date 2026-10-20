@@ -1,0 +1,524 @@
+/* Ferdinand Baudrexl Metalltechnik — Kundenseite (aus Konzept v2 „Die Baugruppe“, Auftrag 19.10.2026)
+   Zulieferer für Maschinenbauer: Laser · Stanzen · Kanten · Schweißen · Baugruppen · Oberfläche.
+   Farben, Schrift, Radien hängen an :root. Radien nach design-regeln.md: 20 px Flächen, 12 px Knöpfe. */
+:root{
+  --platte:#15181c; --platte-2:#1d2126; --platte-3:#2a2f36;
+  --zink:#b9c0c7; --zink-2:#8e969e;
+  --papier:#f4f5f6; --papier-2:#e8eaed; --weiss:#fff;
+  /* AKZENTFARBE — an die Logo-Farbe anpassen (Logo-Wahl am 27.10.2026). Nur diese vier Werte ändern:
+     Gelb (jetzt):  #f5c400  #ffd83a  #6f5600  #15181c
+     Blau:          #1f8fff  #4aa6ff  #0b5cb5  #ffffff
+     Rot:           #e63b23  #ff5a41  #8f1f10  #ffffff
+     --glut = Akzent · --glut-hell = Hover · --glut-text = Akzent als Schrift auf Hell · --auf-glut = Schrift auf dem Akzent */
+  --glut:#f5c400; --glut-hell:#ffd83a; --glut-text:#6f5600; --auf-glut:#15181c;
+  --text:#171a1e; --text-leise:#5b636b; --linie:rgba(23,26,30,.14);
+  --r:20px; --rk:12px;
+  --breit:1240px; --zeit:.34s; --ease:cubic-bezier(.22,.61,.36,1);
+  --kopf:112px; --rand:28px;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:clip}
+body{margin:0;background:var(--papier);color:var(--text);font-family:'Schibsted Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:17px;line-height:1.62;overflow-x:clip;-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit}
+button{font:inherit}
+h1,h2,h3,h4{font-family:'Schibsted Grotesk',system-ui,sans-serif;font-weight:800;line-height:1.06;text-wrap:balance;overflow-wrap:break-word;hyphens:auto}
+h1{font-size:clamp(38px,5.4vw,70px);letter-spacing:-.025em;margin:0 0 18px}
+h2{font-size:clamp(29px,3.5vw,46px);letter-spacing:-.02em;margin:0 0 16px}
+h3{font-size:clamp(20px,2vw,24px);letter-spacing:-.01em;margin:0 0 10px}
+p{margin:0 0 16px;text-wrap:pretty}
+.mono{font-family:'Martian Mono',ui-monospace,monospace}
+.leise{color:var(--text-leise);font-size:15.5px}
+.hinweis-klein{margin-top:20px;font-size:14px;color:var(--text-leise)}
+.wrap{max-width:var(--breit);margin:0 auto;padding:0 var(--rand)}
+.skip{position:absolute;left:-999px;top:0;display:inline-flex;align-items:center;min-height:44px}
+.skip:focus{left:12px;top:12px;background:var(--glut);padding:10px 14px;z-index:99}
+
+/* ---------- Kicker ---------- */
+.kicker{display:inline-flex;align-items:center;gap:12px;font-family:'Martian Mono',monospace;font-size:13px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--glut);margin-bottom:14px;font-weight:500}
+.kicker::before{content:"";width:22px;height:2px;flex:0 0 auto;background:currentColor}
+.kicker.dunkel{color:var(--glut-text)}
+
+/* ---------- Kopf ---------- */
+.topbar{background:var(--platte);color:var(--zink);font-size:13.5px}
+.topbar > .wrap{display:flex;justify-content:space-between;align-items:center;gap:18px;min-height:38px}
+.topbar a{color:var(--zink);text-decoration:none;display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:0 2px}
+.topbar a:hover{color:var(--weiss)}
+.topbar a svg{width:15px;height:15px;flex:0 0 auto}
+.topbar .slogan{letter-spacing:.06em;text-transform:uppercase;font-size:13px;color:var(--zink-2)}
+.topbar-rechts{display:flex;gap:22px;flex-wrap:wrap}
+.kopf{position:sticky;top:0;z-index:60;background:rgba(244,245,246,.82);backdrop-filter:saturate(1.6) blur(14px);
+  border-bottom:1px solid var(--linie);transition:background var(--zeit)}
+.kopf > .wrap{display:flex;align-items:center;gap:26px;min-height:74px}
+.marke{display:inline-flex;align-items:center;gap:12px;text-decoration:none;min-height:44px;color:var(--platte)}
+.marke img{height:42px;width:auto;display:block;transition:transform .3s var(--ease)}
+.marke:hover img{transform:translateY(-1px)}
+.marke:active img{transform:scale(.98);transition-duration:.1s}
+.fuss .marke img{height:46px}
+.nav{margin-left:auto;display:flex;align-items:center;gap:6px}
+.nav > a,.nav .hat-menu > a{position:relative;display:inline-flex;align-items:center;min-height:44px;padding:0 13px;text-decoration:none;font-weight:600;font-size:15.5px;color:var(--platte)}
+.nav > a::after,.nav .hat-menu > a::after{content:"";position:absolute;left:13px;right:13px;bottom:8px;height:2px;background:var(--glut);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease)}
+.nav > a:hover::after,.nav .hat-menu:hover > a::after,.nav a[aria-current]::after{transform:scaleX(1)}
+.hat-menu{position:relative}
+.drop{position:absolute;left:0;top:100%;min-width:300px;background:var(--weiss);border:1px solid var(--linie);border-radius:var(--rk);
+  box-shadow:0 24px 60px rgba(21,24,28,.16);padding:8px;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .25s var(--ease),transform .25s var(--ease),visibility 0s .25s;z-index:70}
+.drop::before{content:"";position:absolute;left:28px;top:-7px;width:12px;height:12px;background:var(--weiss);border-left:1px solid var(--linie);border-top:1px solid var(--linie);transform:rotate(45deg)}
+.hat-menu:hover .drop,.hat-menu:focus-within .drop{opacity:1;visibility:visible;transform:translateY(0);transition-delay:0s}
+.drop a{display:flex;gap:12px;align-items:center;min-height:44px;padding:6px 12px;text-decoration:none;border-radius:8px;font-weight:600;font-size:15px;color:var(--platte)}
+.drop a:hover{background:var(--papier)}
+.drop a svg{flex:0 0 auto;width:20px;height:20px;color:var(--platte)}
+.drop a .nr{font-family:'Martian Mono',monospace;font-size:13px;color:var(--glut-text);width:22px}
+.drop a.alle{border-top:1px solid var(--linie);margin-top:6px;padding-top:12px;font-size:14px;color:var(--glut-text)}
+.nav .cta-kopf{margin-left:8px;background:var(--glut);color:var(--auf-glut);border-radius:var(--rk);padding:0 18px;font-weight:700;transition:transform .25s var(--ease),background .25s}
+.nav .cta-kopf::after{display:none}
+.nav .cta-kopf:hover{background:var(--glut-hell);transform:translateY(-2px)}
+.nav .cta-kopf:active{transform:scale(.97)}
+.burger{display:none;margin-left:auto;background:none;border:0;padding:10px;cursor:pointer;color:var(--platte);min-width:44px;min-height:44px}
+.burger svg{width:28px;height:28px}
+#mobilmenu{display:none}
+
+/* ---------- Knöpfe ---------- */
+.knopf,.knopf-um{position:relative;display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:12px 22px;border-radius:var(--rk);
+  font-weight:700;font-size:16px;text-decoration:none;border:0;cursor:pointer;overflow:hidden;transition:transform .3s var(--ease),background .3s,border-color .3s,box-shadow .3s}
+.knopf{background:var(--glut);color:var(--auf-glut)}
+.knopf svg,.knopf-um svg{width:19px;height:19px;flex:0 0 auto}
+.knopf:hover{background:var(--glut-hell);transform:translateY(-2px);box-shadow:0 12px 26px color-mix(in srgb,var(--glut) 28%,transparent)}
+.knopf:active,.knopf-um:active{transform:scale(.97);transition-duration:.1s}
+.knopf .glanz{position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.55) 50%,transparent 60%);transform:translateX(-120%);pointer-events:none}
+.knopf:hover .glanz{animation:glanz .7s var(--ease) forwards}
+@keyframes glanz{to{transform:translateX(120%)}}
+.knopf.breit{width:100%;justify-content:center}
+.knopf-um{background:transparent;color:var(--platte);border:2px solid rgba(23,26,30,.55);padding:10px 20px}
+.knopf-um:hover{border-color:var(--platte);background:rgba(23,26,30,.05);transform:translateY(-2px)}
+.hero .knopf-um,.flaeche-platte .knopf-um,.cta-band .knopf-um,.tafel .knopf-um{color:#fff;border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.08);backdrop-filter:blur(6px)}
+.hero .knopf-um:hover,.flaeche-platte .knopf-um:hover,.cta-band .knopf-um:hover,.tafel .knopf-um:hover{border-color:#fff;background:rgba(255,255,255,.16)}
+
+/* ---------- Hero: Video, gerichteter Verlauf, Schriftfeld ---------- */
+.hero{position:relative;background:var(--platte);color:#fff;overflow:hidden;isolation:isolate}
+.hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.hero::before{content:"";position:absolute;inset:0;z-index:1;
+  background:linear-gradient(95deg,rgba(21,24,28,.94) 0%,rgba(21,24,28,.86) 34%,rgba(21,24,28,.42) 62%,rgba(21,24,28,.30) 100%)}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:34%;z-index:1;background:linear-gradient(180deg,transparent,rgba(21,24,28,.7))}
+.hero-in{position:relative;z-index:4;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:48px;align-items:end;
+  padding-top:150px;padding-bottom:140px;min-height:100svh}
+.hero.unter .hero-in{grid-template-columns:minmax(0,1fr);min-height:100svh;padding-top:96px;padding-bottom:104px;align-items:center}
+.hero-text{max-width:680px}
+.hero h1{color:#fff;margin-bottom:16px}
+.hero.unter h1{font-size:clamp(34px,4.4vw,58px)}
+.hero .h1-ort{display:block;font-family:'Martian Mono',monospace;font-weight:500;font-size:clamp(14px,1.1vw,17px);letter-spacing:.08em;text-transform:uppercase;color:var(--glut);margin-top:14px}
+.hero .lead{font-size:clamp(17px,1.35vw,20px);color:rgba(255,255,255,.9);max-width:54ch;margin-bottom:30px}
+.hero-knoepfe{display:flex;gap:14px;flex-wrap:wrap}
+.hero .kicker{color:var(--glut)}
+.krumen{display:inline-flex;gap:9px;flex-wrap:wrap;font-size:13.5px;color:#fff;margin-bottom:22px;font-family:'Martian Mono',monospace;align-items:center;background:rgba(21,24,28,.62);backdrop-filter:blur(8px);padding:0 12px;border-radius:10px}
+.krumen a{color:rgba(255,255,255,.85);text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
+.krumen a:hover{color:#fff}
+/* Schriftfeld — der Zeichnungskopf als Faktenkarte */
+.schriftfeld{justify-self:end;width:100%;max-width:400px;border:1px solid rgba(255,255,255,.35);border-radius:var(--rk);overflow:hidden;
+  backdrop-filter:blur(8px);background:rgba(21,24,28,.55);font-family:'Martian Mono',monospace;font-size:13px}
+.schriftfeld .zeile{display:grid;grid-template-columns:118px minmax(0,1fr);border-top:1px solid rgba(255,255,255,.22)}
+.schriftfeld .zeile:first-child{border-top:0;background:color-mix(in srgb,var(--glut) 14%,transparent)}
+.schriftfeld .zeile > span{padding:10px 12px;line-height:1.45}
+.schriftfeld .zeile > span:first-child{color:var(--glut);border-right:1px solid rgba(255,255,255,.22);letter-spacing:.06em;text-transform:uppercase}
+.schriftfeld .zeile > span:last-child{color:#fff}
+
+/* ---------- Die Tafel: Leistungen als Ausschnitte aus einer Blechtafel ---------- */
+.tafel{background:var(--platte);color:#fff;padding:96px 0}
+.tafel .kopfzeile h2,.tafel h3{color:#fff}
+.tafel .kopfzeile p{color:var(--zink)}
+.tafel-gitter{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;background:rgba(255,255,255,.12);border-radius:var(--r);overflow:hidden;padding:2px}
+.teil{position:relative;display:flex;flex-direction:column;justify-content:flex-end;background:var(--platte-2);padding:24px 24px 26px;text-decoration:none;color:#fff;min-height:300px;overflow:hidden;
+  transition:background .3s var(--ease),transform .3s var(--ease);isolation:isolate}
+.teil img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:transform .6s var(--ease);filter:saturate(.85)}
+.teil::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(21,24,28,.25) 0%,rgba(21,24,28,.55) 45%,rgba(21,24,28,.94) 100%)}
+.teil:hover img{transform:scale(1.05)}
+.teil .pos,.teil .teil-text,.teil .mehr{position:relative;z-index:2}
+.teil .pos{position:absolute;left:24px;top:22px}
+.teil .teil-text{padding-right:56px}
+.teil::after{content:"";position:absolute;inset:0;border:2px solid var(--glut);opacity:0;transition:opacity .3s;pointer-events:none;box-shadow:inset 0 0 22px color-mix(in srgb,var(--glut) 35%,transparent)}
+.teil:hover{background:var(--platte-3)}
+.teil:hover::after{opacity:1}
+.teil .pos{font-family:'Martian Mono',monospace;font-size:13px;color:var(--glut);letter-spacing:.1em}
+.teil svg.ico{width:28px;height:28px;color:var(--glut);margin:0 0 10px;display:block}
+.teil h3{font-size:22px;margin:0 0 6px;color:#fff}
+.teil p{margin:0;font-size:15.5px;color:rgba(255,255,255,.9);max-width:30ch}
+.teil .mehr{position:absolute;right:22px;bottom:24px;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.35);display:grid;place-items:center;transition:background .3s,border-color .3s}
+.teil .mehr svg{width:16px;height:16px}
+.teil:hover .mehr{background:var(--glut);color:var(--auf-glut);border-color:var(--glut)}
+.tafel-fuss{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-top:26px;flex-wrap:wrap;color:var(--zink);font-size:15px}
+
+/* ---------- Flächen ---------- */
+section{padding:96px 0}
+section.eng{padding:64px 0}
+section.pt0{padding-top:0}
+.flaeche-hell{background:var(--papier)}
+.flaeche-weiss{background:var(--weiss)}
+.flaeche-platte{background:var(--platte);color:#fff}
+.flaeche-platte h2,.flaeche-platte h3{color:#fff}
+.flaeche-platte p{color:var(--zink)}
+.kopfzeile{max-width:760px;margin-bottom:44px}
+.kopfzeile p{font-size:18px;color:var(--text-leise)}
+.flaeche-platte .kopfzeile p{color:var(--zink)}
+.duo{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:stretch}
+.duo.rum{grid-template-columns:.9fr 1.1fr}
+.duo > div:first-child{display:flex;flex-direction:column;justify-content:space-between}
+.duo > div:first-child > *:last-child{align-self:flex-start;margin-top:26px}
+.liste{list-style:none;padding:0;margin:8px 0 0}
+.liste li{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--linie)}
+.liste li svg{width:20px;height:20px;flex:0 0 auto;color:var(--glut-text);margin-top:4px}
+.flaeche-platte .liste li{border-color:rgba(255,255,255,.12)}
+.flaeche-platte .liste li svg{color:var(--glut)}
+
+/* ---------- Bild-Reveal: der Schnitt läuft durchs Bild ---------- */
+.bildbox{position:relative;overflow:hidden;border-radius:var(--r);background:var(--platte-3);min-height:340px;transform:translateZ(0)}
+.bildbox img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.bildbox .schnittlinie{position:absolute;top:0;bottom:0;left:0;width:3px;background:var(--glut);box-shadow:0 0 18px 4px color-mix(in srgb,var(--glut) 80%,transparent);z-index:3;opacity:0}
+.bildbox::after{content:"";position:absolute;inset:0;background:var(--platte);z-index:2;transform:translateX(0);transition:transform 1.1s var(--ease)}
+html.js:not(.js-tot) .bildbox.da::after{transform:translateX(101%)}
+html.js:not(.js-tot) .bildbox.da .schnittlinie{animation:schnitt 1.1s var(--ease) forwards}
+@keyframes schnitt{0%{left:0;opacity:1}90%{opacity:1}100%{left:100%;opacity:0}}
+html:not(.js) .bildbox::after,html.js-tot .bildbox::after{display:none}
+.bildbox figcaption{position:absolute;left:0;right:0;bottom:0;z-index:4;padding:44px 20px 16px;color:#fff;font-size:14px;
+  background:linear-gradient(180deg,transparent,rgba(21,24,28,.85))}
+
+/* ---------- Karten ---------- */
+.gitter{display:grid;gap:22px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.karte{background:var(--weiss);border:1px solid var(--linie);border-radius:var(--r);padding:28px 26px;transition:transform .3s var(--ease),box-shadow .3s var(--ease),border-color .3s}
+.flaeche-weiss .karte{background:var(--papier)}
+.karte:hover{border-color:rgba(23,26,30,.3);transform:translateY(-3px);box-shadow:0 20px 44px rgba(21,24,28,.1)}
+.karte .ico{width:46px;height:46px;padding:11px;background:color-mix(in srgb,var(--glut) 16%,transparent);color:var(--platte);border-radius:12px;margin-bottom:16px}
+.karte h3{font-size:20px}
+.karte p{margin:0;font-size:15.5px;color:var(--text-leise)}
+.l-karte{display:block;text-decoration:none;background:var(--weiss);border-radius:var(--r);overflow:hidden;border:1px solid var(--linie);color:inherit;
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease);transform:translateZ(0)}
+.l-karte:hover{transform:translateY(-4px);box-shadow:0 24px 54px rgba(21,24,28,.14)}
+.l-karte .bild{aspect-ratio:16/10;overflow:hidden;background:var(--platte-3);position:relative}
+.l-karte .bild img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.l-karte:hover .bild img{transform:scale(1.05)}
+.l-karte .bild .pos{position:absolute;left:14px;top:14px;background:rgba(21,24,28,.75);color:var(--glut);font-family:'Martian Mono',monospace;font-size:13px;padding:6px 9px;border-radius:8px}
+.l-karte .txt{padding:22px 24px 24px}
+.l-karte h3{font-size:21px}
+.l-karte p{margin:0 0 12px;font-size:15.5px;color:var(--text-leise)}
+.l-karte .mehr{font-weight:700;color:var(--glut-text);display:inline-flex;align-items:center;gap:6px;min-height:44px}
+.l-karte .mehr svg{width:17px;height:17px;transition:transform .25s var(--ease)}
+.l-karte:hover .mehr svg{transform:translateX(4px)}
+.galerie{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.galerie figure{margin:0;aspect-ratio:4/3;overflow:hidden;border-radius:var(--r);background:var(--platte-3);position:relative;transform:translateZ(0)}
+.galerie img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.galerie figure:hover img{transform:scale(1.05)}
+.galerie figcaption{position:absolute;left:0;right:0;bottom:0;padding:40px 16px 14px;color:#fff;font-size:14px;background:linear-gradient(180deg,transparent,rgba(21,24,28,.85))}
+
+/* ---------- Die Signatur: das Zeichnungsblatt ---------- */
+.blatt-sektion{background:var(--papier-2)}
+.blatt{background:var(--weiss);border:1px solid rgba(23,26,30,.35);border-radius:var(--r);position:relative;overflow:hidden;box-shadow:0 30px 80px rgba(21,24,28,.12)}
+.blatt .zonen{display:flex;justify-content:space-around;font-family:'Martian Mono',monospace;font-size:13px;color:var(--text-leise);border-bottom:1px solid rgba(23,26,30,.2);padding:6px 60px}
+.blatt-innen{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);gap:0}
+.blatt .zeichnung{padding:20px 20px 52px;border-right:1px solid rgba(23,26,30,.2);position:relative;display:flex;align-items:center;justify-content:center}
+.blatt .zeichnung svg.expl{width:100%;max-width:560px;height:auto;display:block}
+.blatt .posliste{padding:0}
+.posliste table{width:100%;border-collapse:collapse;font-size:14.5px}
+.posliste th,.posliste td{text-align:left;padding:12px 16px;border-bottom:1px solid rgba(23,26,30,.14);vertical-align:top}
+.posliste th{font-family:'Martian Mono',monospace;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-leise);font-weight:500;background:var(--papier)}
+.posliste td.nr{font-family:'Martian Mono',monospace;color:var(--glut-text);width:56px}
+.posliste td b{display:block;font-weight:700}
+.posliste td span{color:var(--text-leise);font-size:14px}
+.posliste tr{transition:background .25s}
+.posliste tr.an td{background:color-mix(in srgb,var(--glut) 14%,transparent)}
+.posliste tr.hier td{background:color-mix(in srgb,var(--glut) 32%,transparent)}
+.schriftfeld-blatt{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid rgba(23,26,30,.35);font-family:'Martian Mono',monospace;font-size:13px}
+.schriftfeld-blatt > div{padding:10px 14px;border-right:1px solid rgba(23,26,30,.2)}
+.schriftfeld-blatt > div:last-child{border-right:0}
+.schriftfeld-blatt small{display:block;font-size:13px;color:var(--text-leise);letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
+.schriftfeld-blatt b{font-weight:500;font-family:'Martian Mono',monospace;font-size:14px}
+.expl .achse{stroke:#9aa1a8;stroke-width:1.5;stroke-dasharray:6 6;fill:none}
+.expl .teilg{transition:none}
+.expl .platte-t{fill:#cfd5db;stroke:#3a4148;stroke-width:1.6;stroke-linejoin:round}
+.expl .loch{fill:#fff;stroke:#3a4148;stroke-width:1.2}
+.expl .kant-a{fill:#b9c0c7;stroke:#3a4148;stroke-width:1.6;stroke-linejoin:round}
+.expl .kant-b{fill:#9ea6ad;stroke:#3a4148;stroke-width:1.6;stroke-linejoin:round}
+.expl .naht{fill:none;stroke:var(--glut);stroke-width:3;stroke-linecap:round;stroke-dasharray:4 5}
+.expl .bolzen{fill:#5d666e;stroke:#2b3137;stroke-width:1.2}
+.expl .ballon circle{fill:#fff;stroke:var(--platte);stroke-width:1.5}
+.expl .ballon text{font-family:'Martian Mono',monospace;font-weight:500;fill:var(--platte);font-size:15px}
+.expl .ballon line{stroke:var(--platte);stroke-width:1.2}
+.expl .ballon{cursor:pointer}
+.expl .ballon.an circle,.expl .ballon.hier circle,.expl .ballon:hover circle{fill:var(--glut)}
+.expl .lack{fill:var(--glut);mix-blend-mode:multiply;pointer-events:none}
+.blatt .ablese{position:absolute;left:20px;bottom:16px;font-family:'Martian Mono',monospace;font-size:13px;color:var(--text-leise)}
+.blatt .ablese b{color:var(--platte);font-weight:500}
+.blatt-hinweis{margin-top:22px;font-size:15px;color:var(--text-leise);display:flex;gap:10px;align-items:flex-start}
+.blatt-hinweis svg{width:20px;height:20px;flex:0 0 auto;color:var(--glut-text);margin-top:3px}
+
+/* ---------- Werkstoffe: drei querlaufende Materialbaender ---------- */
+.mat{position:relative;border-top:1px solid rgba(23,26,30,.18);overflow:hidden;transform:translateZ(0)}
+.mat::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,0) 0 7px,rgba(255,255,255,.07) 7px 8px);pointer-events:none}
+.mat.stahl{background-color:#2a2f36;background-image:linear-gradient(90deg,#3b424a,#1d2126 55%,#4a525b);color:#fff}
+.mat.edelstahl{background-color:#c3cad1;background-image:linear-gradient(90deg,#d9dee3,#a7afb7 40%,#e9ecef 70%,#b5bcc3);color:var(--platte)}
+.mat.alu{background-color:#dfe3e7;background-image:linear-gradient(90deg,#eef0f2,#c9cfd5 45%,#f7f8f9 75%,#d6dbe0);color:var(--platte)}
+.mat-in{position:relative;z-index:1;display:grid;grid-template-columns:56px minmax(0,.8fr) minmax(0,1.6fr);gap:28px;align-items:center;padding-top:34px;padding-bottom:34px}
+.mat-nr{font-family:'Martian Mono',monospace;font-size:13px;letter-spacing:.1em;opacity:.75}
+.mat-name{font-family:'Schibsted Grotesk',sans-serif;font-weight:800;font-size:clamp(28px,3vw,42px);letter-spacing:-.02em;line-height:1}
+.mat-guete{font-family:'Martian Mono',monospace;font-size:14px;letter-spacing:.06em;padding:8px 12px;border:1px solid currentColor;border-radius:10px;justify-self:start;opacity:.9;white-space:nowrap}
+.mat p{margin:0;font-size:16px;max-width:52ch}
+.mat.stahl p{color:var(--zink)}
+.mat.edelstahl p,.mat.alu p{color:#2b3137}
+
+/* ---------- Für wen: Zeilenliste ---------- */
+.wen-liste{list-style:none;padding:0;margin:8px 0 0}
+.wen-liste li{display:flex;gap:16px;align-items:flex-start;padding:16px 0;border-top:1px solid var(--linie)}
+.wen-liste li:last-child{border-bottom:1px solid var(--linie)}
+.wen-liste li > svg{width:40px;height:40px;flex:0 0 auto;padding:9px;background:color-mix(in srgb,var(--glut) 16%,transparent);color:var(--platte);border-radius:10px}
+.wen-liste b{display:block;font-size:18px;margin-bottom:3px}
+.wen-liste span{color:var(--text-leise);font-size:15.5px}
+
+/* ---------- Metallbau: breites Bildband mit Textkarte ---------- */
+
+/* ---------- Laufkarte ---------- */
+.laufkarte{background:var(--weiss);border:1px solid rgba(23,26,30,.3);border-radius:var(--r);overflow:hidden;max-width:980px;margin:0 auto;box-shadow:0 20px 60px rgba(21,24,28,.1)}
+.laufkarte .lk-kopf{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:16px 24px;border-bottom:1px solid rgba(23,26,30,.3);background:var(--papier);font-family:'Martian Mono',monospace;font-size:13px;color:var(--text-leise);flex-wrap:wrap}
+.laufkarte .lk-kopf b{color:var(--platte);font-weight:500;letter-spacing:.1em;text-transform:uppercase}
+.lk-ablauf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.lk-schritt{padding:26px 22px 28px;border-right:1px solid rgba(23,26,30,.14);position:relative;min-height:230px}
+.lk-schritt:last-child{border-right:0}
+.lk-schritt .nr{font-family:'Martian Mono',monospace;font-size:13px;color:var(--glut-text);letter-spacing:.1em}
+.lk-schritt h3{font-size:19px;margin:10px 0 8px}
+.lk-schritt p{margin:0;font-size:15px;color:var(--text-leise)}
+.lk-schritt .stempel{position:absolute;right:16px;top:16px;width:58px;height:58px;border-radius:50%;border:3px solid var(--glut-text);color:var(--glut-text);display:grid;place-items:center;
+  font-family:'Martian Mono',monospace;font-size:13px;letter-spacing:.06em;transform:rotate(-14deg) scale(1.6);opacity:0;transition:transform .45s cubic-bezier(.2,1.4,.4,1),opacity .3s}
+.lk-schritt .stempel svg{width:24px;height:24px}
+html:not(.js) .lk-schritt .stempel,html.js-tot .lk-schritt .stempel,.lk-schritt.an .stempel{opacity:.9;transform:rotate(-14deg) scale(1)}
+
+/* ---------- Zahlen ---------- */
+.zahlen{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
+.zahlen > div{border-top:2px solid var(--glut);padding-top:18px}
+.zahl-gross{font-family:'Schibsted Grotesk',sans-serif;font-weight:800;font-size:clamp(40px,4.4vw,58px);line-height:1;display:block;letter-spacing:-.03em;color:#fff}
+.zahlen > div > span:last-child{display:block;margin-top:8px;color:var(--zink);font-size:15px}
+
+/* ---------- Orte ---------- */
+.orte{display:flex;flex-wrap:wrap;gap:8px}
+.orte span{display:inline-flex;align-items:center;min-height:36px;padding:0 13px;border-radius:999px;border:1px solid var(--linie);font-size:14px;background:var(--weiss);color:var(--text)}
+.orte span.nah{background:var(--platte);color:#fff;border-color:var(--platte)}
+.flaeche-platte .orte span{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.2);color:#fff}
+.flaeche-platte .orte span.nah{background:var(--glut);color:var(--auf-glut);border-color:var(--glut)}
+
+/* ---------- FAQ ---------- */
+.faq{max-width:860px}
+.faq details{border-bottom:1px solid var(--linie)}
+.faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px 0;font-weight:700;font-size:18px;min-height:44px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:'Martian Mono',monospace;color:var(--glut-text);font-size:22px;flex:0 0 auto;transition:transform .3s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq .a p{color:var(--text-leise);margin:0 0 18px;max-width:70ch}
+
+/* ---------- Statement ---------- */
+.statement{font-family:'Schibsted Grotesk',sans-serif;font-weight:800;font-size:clamp(26px,3.4vw,48px);line-height:1.15;letter-spacing:-.02em;margin:0;color:rgba(255,255,255,.22);text-wrap:balance}
+.statement .w{transition:color .3s}
+.statement .w.an{color:#fff}
+html:not(.js) .statement,html.js-tot .statement{color:#fff}
+
+/* ---------- CTA-Band: Titel → Subzeile → Schrittzeile → Knöpfe ---------- */
+.cta-band{position:relative;background:var(--platte);color:#fff;overflow:hidden;isolation:isolate;padding:110px 0}
+.cta-band img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.cta-band::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(21,24,28,.82),rgba(21,24,28,.9))}
+.cta-band > .wrap{position:relative;z-index:2;text-align:center}
+.cta-band h2{color:#fff;max-width:760px;margin:0 auto 12px}
+.cta-band > .wrap > p{color:var(--zink);max-width:620px;margin:0 auto 30px;font-size:18px}
+.cta-schritte{display:flex;justify-content:center;gap:0;flex-wrap:wrap;margin:0 auto 34px;padding:0;list-style:none}
+.cta-schritte li{display:inline-flex;align-items:center;gap:10px;color:#fff;font-weight:600;font-size:15.5px}
+.cta-schritte li svg{width:22px;height:22px;color:var(--glut)}
+.cta-schritte li + li::before{content:"";width:34px;height:2px;background:rgba(255,255,255,.35);margin:0 14px}
+.cta-knoepfe{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.cta-band .knopf-um{color:#fff;border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.1)}
+
+/* ---------- Jobs / Über uns ---------- */
+.stelle{background:var(--weiss);border:1px solid var(--linie);border-radius:var(--r);padding:30px 28px;position:relative}
+.stelle .marker{display:inline-flex;align-items:center;min-height:30px;padding:0 12px;border-radius:999px;background:var(--glut);color:var(--auf-glut);font-family:'Martian Mono',monospace;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.ablauf{list-style:none;padding:0;margin:0;display:grid;gap:0}
+.ablauf li{display:grid;grid-template-columns:130px minmax(0,1fr);gap:16px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.14)}
+.ablauf li b{font-family:'Martian Mono',monospace;font-weight:500;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--glut);padding-top:3px}
+.ablauf li span{color:var(--zink)}
+.person{text-align:center;background:var(--weiss);border:1px solid var(--linie);border-radius:var(--r);padding:28px 22px;transition:transform .3s var(--ease),box-shadow .3s var(--ease),border-color .3s}
+.person:hover{border-color:rgba(23,26,30,.3);transform:translateY(-3px);box-shadow:0 20px 44px rgba(21,24,28,.1)}
+.person .kopfbild{width:120px;height:120px;border-radius:50%;overflow:hidden;margin:0 auto 14px;background:var(--papier-2)}
+.person .kopfbild svg{width:120px;height:120px;display:block}
+.person b{display:block;font-size:18px}
+.person span{color:var(--text-leise);font-size:15px}
+
+/* ---------- Kontakt ---------- */
+.kontakt-gitter{display:grid;grid-template-columns:.85fr 1.15fr;gap:34px;align-items:stretch}
+.info-karte{background:var(--platte);color:#fff;border-radius:var(--r);padding:32px 30px;display:flex;flex-direction:column;gap:20px}
+.info-karte h3{color:#fff;margin:6px 0 0}
+.info-zeile{display:flex;gap:14px;align-items:flex-start}
+.info-zeile > svg{width:22px;height:22px;flex:0 0 auto;color:var(--glut);margin-top:2px}
+.info-zeile b{display:block;font-size:14px;color:var(--zink);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:2px}
+.info-zeile a{color:#fff;text-decoration:none;display:inline-flex;align-items:center;min-height:44px;margin:-10px 0}
+.info-zeile a:hover{color:var(--glut)}
+.info-fuss{margin-top:auto;padding-top:18px;border-top:1px solid rgba(255,255,255,.14)}
+.info-fuss p{color:var(--zink);margin:0;font-size:15px}
+.anfrage{background:var(--weiss);border:1px solid var(--linie);border-radius:var(--r);padding:32px 30px}
+.anfrage h3{margin-bottom:4px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 22px}
+.chip{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--linie);background:var(--papier);cursor:pointer;font-size:14.5px;font-weight:600;transition:background .2s,border-color .2s}
+.chip:hover{border-color:var(--platte)}
+.chip{display:inline-flex;align-items:center;position:relative}
+.chip input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.chip:has(input:checked){background:var(--glut);border-color:var(--glut);color:var(--auf-glut)}
+.chip:has(input:focus-visible){outline:2px solid var(--platte);outline-offset:2px}
+.chip:active{transform:scale(.97);transition-duration:.1s}
+.feld label i{font-style:normal;color:var(--glut-text)}
+.feld.fehlt input,.feld.fehlt textarea,.feld input.fehlt,.feld textarea.fehlt{border-color:#b3261e;box-shadow:0 0 0 3px rgba(179,38,30,.15)}
+.honig{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}
+.meldung{border-radius:var(--rk);padding:14px 16px;margin:0 0 16px;font-size:15.5px}
+.meldung.ok{background:#e7f4ea;color:#1d5a2b}
+.meldung.fehler{background:#fbe9e7;color:#8c1d14}
+.meldung a{color:inherit;font-weight:700}
+.zeichnung-hinweis{display:flex;gap:12px;align-items:flex-start;border:2px dashed rgba(23,26,30,.3);border-radius:var(--rk);padding:16px;color:var(--text-leise);font-size:15px;background:var(--papier);margin:4px 0 18px}
+.zeichnung-hinweis svg{width:24px;height:24px;flex:0 0 auto;color:var(--glut-text)}
+.zeichnung-hinweis a{color:var(--text);font-weight:600}
+.datenschutz-satz{font-size:14px;color:var(--text-leise);margin:12px 0 0}
+.datenschutz-satz a{color:var(--text)}
+.karten-link{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 18px;border-radius:var(--rk);border:1px solid var(--linie);background:var(--weiss);text-decoration:none;font-weight:600;transition:border-color .2s,transform .2s}
+.karten-link:hover{border-color:var(--platte);transform:translateY(-2px)}
+.karten-link svg{width:20px;height:20px}
+.person{text-align:left}
+.feld{margin-bottom:14px}
+.feld label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+.feld input,.feld select,.feld textarea{width:100%;min-height:48px;padding:11px 14px;border:1px solid rgba(23,26,30,.28);border-radius:var(--rk);font:inherit;background:var(--papier);color:var(--text);transition:border-color .2s,box-shadow .2s}
+.feld textarea{min-height:130px;resize:vertical}
+.feld input:focus,.feld select:focus,.feld textarea:focus{outline:0;border-color:var(--platte);box-shadow:0 0 0 3px color-mix(in srgb,var(--glut) 35%,transparent)}
+
+/* ---------- Recht ---------- */
+.recht h2{font-size:26px;margin-top:34px}
+.recht h3{font-size:19px;margin-top:22px}
+.h1-recht{font-size:clamp(34px,4vw,52px)}
+.hinweis-box{background:color-mix(in srgb,var(--glut) 16%,transparent);border-radius:var(--rk);padding:16px 18px;margin-top:26px}
+
+/* ---------- Fuß ---------- */
+.fuss{background:var(--platte);color:var(--zink);padding:70px 0 0}
+.fuss-gitter{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.1fr;gap:40px}
+.fuss h4,.fuss .fh{color:#fff;font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 14px;font-weight:700}
+.fuss ul{list-style:none;padding:0;margin:0}
+.fuss li a,.fuss .fuss-zeile{display:inline-flex;align-items:center;min-height:44px;color:var(--zink);text-decoration:none;font-size:15px;overflow-wrap:anywhere}
+.fuss li a:hover{color:#fff}
+.fuss-text{font-size:15px;margin:16px 0 10px;max-width:40ch}
+.fuss-klein{font-size:13.5px;color:var(--zink-2)}
+.fuss-unten{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.12);margin-top:36px;padding:18px 0 22px;font-size:14px}
+.fuss-unten nav{display:flex;gap:18px}
+.fuss-unten a{color:var(--zink);text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
+
+/* ---------- Reveal, Cursor, Wechsel ---------- */
+html.js:not(.js-tot) .rv{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+html.js:not(.js-tot) .rv.da{opacity:1;transform:none}
+.punkt{position:fixed;left:0;top:0;width:14px;height:14px;border:2px solid var(--glut);pointer-events:none;z-index:99;opacity:0;transition:opacity .2s,width .25s,height .25s;mix-blend-mode:normal;outline:1px solid rgba(21,24,28,.35)}
+.punkt::after{content:"";position:absolute;left:50%;top:50%;width:4px;height:4px;background:var(--glut);transform:translate(-50%,-50%)}
+.punkt.an{opacity:1}
+.punkt.griff{width:30px;height:30px}
+.wechsel{position:fixed;inset:0;z-index:98;pointer-events:none;display:none;background:var(--platte);transform:translateX(101%)}
+.wechsel::before{content:"";position:absolute;left:-3px;top:0;bottom:0;width:3px;background:var(--glut);box-shadow:0 0 22px 6px color-mix(in srgb,var(--glut) 70%,transparent)}
+.wechsel.laeuft{display:block;animation:wisch .42s var(--ease) forwards}
+@keyframes wisch{to{transform:translateX(0)}}
+
+/* ---------- Mobil ---------- */
+@media (max-width:1100px){
+  .hero-in{grid-template-columns:minmax(0,1fr)}
+  .schriftfeld{justify-self:start;max-width:520px}
+}
+@media (max-width:900px){
+  :root{--kopf:100px;--rand:20px}
+  .topbar .slogan{display:none}
+  .topbar > .wrap{justify-content:center}
+  .nav{display:none}
+  .burger{display:inline-flex;align-items:center;justify-content:center}
+  #mobilmenu{display:block;position:fixed;left:0;right:0;top:var(--kopf);height:calc(100svh - var(--kopf));background:var(--platte);color:#fff;z-index:59;
+    transform:translateY(-12px);opacity:0;visibility:hidden;transition:opacity .3s var(--ease),transform .3s var(--ease),visibility 0s .3s;overflow:auto}
+  #mobilmenu.offen{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+  #mobilmenu > .wrap{display:flex;flex-direction:column;padding-top:16px;padding-bottom:40px}
+  #mobilmenu a{color:#fff;text-decoration:none;display:flex;align-items:center;min-height:52px;font-size:19px;font-weight:700;border-bottom:1px solid rgba(255,255,255,.12)}
+  #mobilmenu .gruppe{padding:8px 0}
+  #mobilmenu .gruppe b{display:block;font-family:'Martian Mono',monospace;font-weight:500;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--glut);padding:14px 0 4px}
+  #mobilmenu .gruppe a{font-size:16.5px;font-weight:500;min-height:46px;padding-left:12px;border-bottom:0}
+  #mobilmenu .knopf{margin-top:20px;justify-content:center;border-bottom:0}
+  #mobilmenu .zu{display:none}
+  .hero-in{padding-top:72px;padding-bottom:78px;min-height:auto}
+  .hero.unter .hero-in{min-height:100svh;padding-top:72px;padding-bottom:78px}
+  .tafel-gitter{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .duo,.duo.rum{grid-template-columns:minmax(0,1fr);gap:34px}
+  .g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .galerie{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mat-in{grid-template-columns:44px minmax(0,1fr);gap:10px 16px;padding-top:26px;padding-bottom:26px}
+  .mat-guete{grid-column:2}
+  .mat p{grid-column:2}
+  .blatt-innen{grid-template-columns:minmax(0,1fr)}
+  .blatt .zeichnung{border-right:0;border-bottom:1px solid rgba(23,26,30,.2)}
+  .blatt .zonen{padding:6px 16px}
+  .expl .ballon text{font-size:21px}
+  .expl .ballon circle{r:17px}
+  .schriftfeld-blatt{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .schriftfeld-blatt > div:nth-child(2n){border-right:0}
+  .schriftfeld-blatt > div:nth-child(-n+2){border-bottom:1px solid rgba(23,26,30,.2)}
+  .lk-ablauf{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .lk-schritt:nth-child(2n){border-right:0}
+  .lk-schritt:nth-child(-n+2){border-bottom:1px solid rgba(23,26,30,.14)}
+  .zahlen{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kontakt-gitter{grid-template-columns:minmax(0,1fr)}
+  .fuss-gitter{grid-template-columns:repeat(2,minmax(0,1fr));gap:30px}
+      .ablauf li{grid-template-columns:110px minmax(0,1fr)}
+  .cta-schritte{flex-direction:column;align-items:flex-start;gap:12px;margin-left:auto;margin-right:auto;width:max-content;max-width:100%}
+  .cta-schritte li + li::before{display:none}
+  .punkt{display:none}
+}
+@media (max-width:640px){
+  .tafel-gitter,.g3,.g4,.g2,.galerie,.zahlen,.lk-ablauf,.fuss-gitter{grid-template-columns:minmax(0,1fr)}
+  .lk-schritt{border-right:0;border-bottom:1px solid rgba(23,26,30,.14)}
+  .schriftfeld .zeile{grid-template-columns:112px minmax(0,1fr)}
+  .schriftfeld .zeile > span:first-child{letter-spacing:.02em;padding-left:9px;padding-right:6px}
+  .marke img{height:36px}
+  .topbar-rechts a:last-child{display:none}
+  .hero-knoepfe .knopf,.hero-knoepfe .knopf-um{width:100%;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rv,.bildbox::after,.knopf,.knopf-um,.karte,.l-karte,.teil{transition:none!important;animation:none!important}
+  .bildbox::after{display:none}
+  .lk-schritt .stempel{opacity:.9;transform:rotate(-14deg) scale(1)}
+  .punkt,.wechsel{display:none!important}
+}
+@media (prefers-reduced-transparency:reduce){
+  .kopf{background:var(--papier);backdrop-filter:none}
+  .schriftfeld{background:rgba(21,24,28,.92);backdrop-filter:none}
+}
+@media (prefers-contrast:more){
+  .karte,.l-karte,.werkstoff,.anfrage{border-color:var(--platte)}
+}
+
+
+/* ── FAQ nicht als einsame Spalte (Noah, 20.09.2026) ──
+   „das ist dann meist plötzlich so in der mitte und sieht so komplett kahl
+   aus". Die Liste stand als 860-px-Spalte in einer 1440-px-Fläche. Sie füllt
+   jetzt die Sektionsbreite; auf schmalen Schirmen ändert sich nichts. */
+.faq{max-width:none}
+
+/* ── Stil-Check 22.09.2026: eine Familie, ein Radius (system/apps/audit/stil_pruefen.mjs) ── */
+figure.bildbox.da{border-radius:0px !important}   /* Karten: 20 → 0 */
+
+
+/* Hausregel: der Hero füllt das Fenster — auf JEDER Seite
+   (Noah, 23.09.2026: der Hero soll 100 % der Fensterhoehe fuellen).
+   Hier stand vorher gar keine Hoehe: der Hero war so hoch wie sein Inhalt. */
+.hero.unter{min-height:100svh}
+
+/* Inline-Links im Fließtext: 44 px Tippfläche ohne Zeilensprung (Padding an Inline-Elementen verschiebt keine Zeilen) */
+.recht p a,.kopfzeile p a,.datenschutz-satz a,.zeichnung-hinweis a,.info-fuss a{padding:13px 0}
+.flaeche-platte .kopfzeile p{color:var(--zink)}
+.fuss .fh{font-family:'Schibsted Grotesk',system-ui,sans-serif;line-height:1.2;letter-spacing:.06em}
+.sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+/* Handy: kein Loch zwischen Schriftfeld (Hero) und Tafel */
+@media (max-width:900px){
+  .hero.start .hero-in{padding-bottom:44px}
+  .tafel{padding-top:64px;padding-bottom:72px}
+}
